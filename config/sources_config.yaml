@@ -1,0 +1,53 @@
+rss_list:
+  - topic: AI
+    feeds:
+      - url: https://arstechnica.com/ai/feed/
+        mode: xml_direct
+      - url: https://huggingface.co/blog/feed.xml
+        mode: xml_indirect
+      - url: https://blog.python.org/blog/
+        mode: scrap_indirect
+      - url: https://realpython.com/atom.xml
+        mode: xml_direct
+  - topic: Cybersec
+    feeds:
+      - url: https://www.wired.com/feed/rss
+        mode: xml_indirect
+      - url: https://feeds.feedburner.com/TheHackersNews?format=xml
+        mode: xml_indirect
+      - url: https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/cybersecurity/rss.xml
+        mode: xml_indirect
+  - topic: Software
+    feeds:
+      - url: https://dev.to/feed
+        mode: xml_direct
+      - url: https://feeds.dzone.com/home
+        mode: scrap_direct
+      - url: https://stackoverflow.blog/feed/
+        mode: xml_indirect
+      - url: https://www.freecodecamp.org/news/rss/
+        mode: xml_direct
+  - topic: WebDev
+    feeds:
+      - url: https://feed.laravel-news.com/
+        mode: scrap_direct
+      - url: https://nodejs.org/en/feed/blog.xml
+        mode: xml_indirect
+      - url: https://medium.com/feed/the-vue-point
+        mode: xml_direct
+  - topic: DevOps
+    feeds:
+      - url: https://www.docker.com/feed/
+        mode: xml_direct
+      - url: https://github.blog/feed/
+        mode: xml_direct
+      - url: https://thenewstack.io/feed
+        mode: xml_direct
+      - url: https://kubernetes.io/feed.xml
+        mode: xml_direct
+      - url: https://devops.com/feed
+        mode: xml_direct
+  - topic: IoT
+    feeds:
+      - url: https://www.iiot-world.com/feed/
+        mode: xml_direct
