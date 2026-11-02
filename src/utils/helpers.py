@@ -21,3 +21,15 @@ def read_yaml(filepath: Path) -> dict:
     except Exception:
         logger.exception("An error occured.")
     return {}
+
+
+def get_feed_topics() -> list[dict]:
+    config_file = "config/sources_config.yaml"
+    yaml_data = read_yaml(Path(config_file))
+    try:
+        return yaml_data["rss_list"]
+    except KeyError:
+        logger.exception("Error: the key used is not valid")
+    except Exception:
+        logger.exception("An error occured.")
+    return []

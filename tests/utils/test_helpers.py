@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 from src.utils import helpers as helpers_module
-from src.utils.helpers import read_yaml
+from src.utils.helpers import get_feed_topics, read_yaml
 
 
 def test_yaml_normal(monkeypatch):
@@ -51,3 +51,27 @@ def test_yaml_error(monkeypatch):
     result = read_yaml(Path("this/is/a/file/path"))
 
     assert result == {}
+
+
+def test_get_feed_topics(monkeypatch):
+    expected_result = {"rss_list": [{"key": "value"}]}
+
+    def mock_read_yaml(filepath: Path):
+        return expected_result
+
+    monkeypatch.setattr(helpers_module, "read_yaml", mock_read_yaml)
+
+    result = get_feed_topics()
+    assert result == [{"key": "value"}]
+
+
+def test_get_feed_topics_error(monkeypatch):
+    expected_result = {"rss_lists": [{"key": "value"}]}
+
+    def mock_read_yaml(filepath: Path):
+        return expected_result
+
+    monkeypatch.setattr(helpers_module, "read_yaml", mock_read_yaml)
+
+    result = get_feed_topics()
+    assert result == []
