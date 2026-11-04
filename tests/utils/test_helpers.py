@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 from src.utils import helpers as helpers_module
-from src.utils.helpers import get_extraction_modes, get_feed_topics, read_yaml
+from src.utils.helpers import get_feed_topics, read_yaml
 
 
 def test_yaml_normal(monkeypatch):
@@ -74,28 +74,4 @@ def test_get_feed_topics_error(monkeypatch):
     monkeypatch.setattr(helpers_module, "read_yaml", mock_read_yaml)
 
     result = get_feed_topics()
-    assert result == []
-
-
-def test_get_extraction_modes(monkeypatch):
-    expected_result = {"extraction_modes": ["toto", "tata", "lolo"]}
-
-    def mock_read_yaml(filepath: Path):
-        return expected_result
-
-    monkeypatch.setattr(helpers_module, "read_yaml", mock_read_yaml)
-
-    result = get_extraction_modes()
-    assert result == ["toto", "tata", "lolo"]
-
-
-def test_get_extraction_modes_fail(monkeypatch):
-    expected_result = {"extractions_modes": ["toto", "tata", "lolo"]}
-
-    def mock_read_yaml(filepath: Path):
-        return expected_result
-
-    monkeypatch.setattr(helpers_module, "read_yaml", mock_read_yaml)
-
-    result = get_extraction_modes()
     assert result == []

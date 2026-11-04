@@ -1,55 +1,44 @@
 rss_list:
   - topic: AI
     feeds:
-      - url: https://arstechnica.com/ai/feed/
-        mode: 0
-      - url: https://huggingface.co/blog/feed.xml
-        mode: 1
-      - url: https://blog.python.org/blog/
-        mode: 2
-      - url: https://realpython.com/atom.xml
-        mode: 0
+      [
+        https://arstechnica.com/ai/feed/,
+        https://huggingface.co/blog/feed.xml,
+        https://realpython.com/atom.xml,
+      ]
+
   - topic: Cybersec
     feeds:
-      - url: https://www.wired.com/feed/rss
-        mode: 1
-      - url: https://feeds.feedburner.com/TheHackersNews?format=xml
-        mode: 1
-      - url: https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/cybersecurity/rss.xml
-        mode: 1
+      [
+        https://www.wired.com/feed/rss,
+        https://feeds.feedburner.com/TheHackersNews?format=xml,
+        https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/cybersecurity/rss.xml,
+      ]
+
   - topic: Software
     feeds:
-      - url: https://dev.to/feed
-        mode: 0
-      - url: https://feeds.dzone.com/home
-        mode: 3
-      - url: https://stackoverflow.blog/feed/
-        mode: 1
-      - url: https://www.freecodecamp.org/news/rss/
-        mode: 0
+      [
+        https://dev.to/feed,
+        https://stackoverflow.blog/feed/,
+        https://www.freecodecamp.org/news/rss/,
+      ]
+
   - topic: WebDev
     feeds:
-      - url: https://feed.laravel-news.com/
-        mode: 3
-      - url: https://nodejs.org/en/feed/blog.xml
-        mode: 1
-      - url: https://medium.com/feed/the-vue-point
-        mode: 0
+      [
+        https://nodejs.org/en/feed/blog.xml,
+        https://medium.com/feed/the-vue-point,
+      ]
+
   - topic: DevOps
     feeds:
-      - url: https://www.docker.com/feed/
-        mode: 0
-      - url: https://github.blog/feed/
-        mode: 0
-      - url: https://thenewstack.io/feed
-        mode: 0
-      - url: https://kubernetes.io/feed.xml
-        mode: 0
-      - url: https://devops.com/feed
-        mode: 0
-  - topic: IoT
-    feeds:
-      - url: https://www.iiot-world.com/feed/
-        mode: 0
+      [
+        https://www.docker.com/feed/,
+        https://github.blog/feed/,
+        https://thenewstack.io/feed,
+        https://kubernetes.io/feed.xml,
+        https://devops.com/feed,
+      ]
 
-extraction_modes: [xml_direct, xml_indirect, scrap_indirect, scrap_direct]
+  - topic: IoT
+    feeds: [https://www.iiot-world.com/feed/]
