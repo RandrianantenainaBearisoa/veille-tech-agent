@@ -1,4 +1,4 @@
-import logging
+# import logging
 from datetime import datetime
 from typing import TypedDict
 
@@ -11,6 +11,7 @@ from src.data.extract.feed_filters import (
     get_feed_item_pub_date,
     is_feed_date_valid,
 )
+from src.logging.logging_config import logging
 from src.utils.helpers import get_feed_topics
 
 logger = logging.getLogger(__name__)

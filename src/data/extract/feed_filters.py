@@ -1,10 +1,12 @@
-import logging
+# import logging
 import re
 from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
-from zoneinfo import ZoneInfo
 
 from lxml.etree import _Element
+
+from src.logging.logging_config import logging
+from src.utils.helpers import get_now_datetime
 
 logger = logging.getLogger(__name__)
 
@@ -140,9 +142,9 @@ def is_feed_date_valid(feed: _Element) -> bool:
     """
     try:
         pub_date = get_feed_item_pub_date(feed)
-        if pub_date is not None:
-            local_tz = ZoneInfo("localtime")
-            two_days_ago = datetime.now(local_tz) - timedelta(days=2)
+        now_datetime = get_now_datetime()
+        if pub_date is not None and now_datetime is not None:
+            two_days_ago = now_datetime - timedelta(days=2)
             return pub_date.date() > two_days_ago.date()
     except Exception:
         logger.exception("An error occured")
