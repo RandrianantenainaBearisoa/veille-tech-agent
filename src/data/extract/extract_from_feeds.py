@@ -84,7 +84,7 @@ def get_feed_item_data(item: _Element) -> FeedItem | None:
             return FeedItem(
                 title=str(item_title.text),
                 pub_date=item_pub_date,
-                description=str(item_description.text),
+                description=extract_from_html(f"<html>{item_description.text}</html>"),
                 link=str(item_link.text),
             )
     except Exception:
