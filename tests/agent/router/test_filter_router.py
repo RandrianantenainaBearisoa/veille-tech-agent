@@ -13,7 +13,7 @@ def test_route_after_priorization_process_01():
         duplicate_check_validation=True, duplicate_check_retry=2
     )
     result = cast(Any, route_after_priorization_process)(state)
-    expected_result = "end_graph"
+    expected_result = "synthetize_content"
 
     assert result == expected_result
 
