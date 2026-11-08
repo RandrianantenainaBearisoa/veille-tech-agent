@@ -15,5 +15,7 @@ class ActuPosterState(TypedDict):
     item_priorization_retry: (
         int  # init to 0 : increment +1 in each item_priorization passage
     )
-    
+
+    duplicate_check_retry: int
+    duplicate_check_validation: bool
     feed_items_final_list: list[FeedItem]  # the 5 items to post

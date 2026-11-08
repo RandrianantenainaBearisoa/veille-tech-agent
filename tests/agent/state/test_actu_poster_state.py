@@ -16,5 +16,7 @@ example_state = ActuPosterState(
     feed_items_relevant_indexes=[],
     priority_list_validation=False,
     item_priorization_retry=0,
+    duplicate_check_validation=False,
+    duplicate_check_retry=0,
     feed_items_final_list=[],
 )
