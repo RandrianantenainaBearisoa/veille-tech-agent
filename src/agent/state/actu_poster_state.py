@@ -3,6 +3,14 @@ from typing import TypedDict
 from src.data.extract.extract_from_feeds import FeedItem
 
 
+class ContentType(TypedDict):
+    title: str
+    subtitle: str
+    icon_suggestions: list[str]
+    content: str
+    categories: list[str]
+
+
 class ActuPosterState(TypedDict):
     feed_items_base_list: list[
         FeedItem
@@ -19,3 +27,5 @@ class ActuPosterState(TypedDict):
     duplicate_check_retry: int
     duplicate_check_validation: bool
     feed_items_final_list: list[FeedItem]  # the 5 items to post
+
+    contents_to_post: list[ContentType]
