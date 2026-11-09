@@ -6,7 +6,7 @@ from email.utils import parsedate_to_datetime
 from lxml.etree import _Element
 
 from src.logging.logging_config import logging
-from src.utils.helpers import get_now_datetime
+from src.utils.utils import get_now_datetime
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,5 @@
 from src.agent.state.actu_poster_state import ActuPosterState, FeedItem
-from src.utils.helpers import get_now_datetime
+from src.utils.utils import get_now_datetime
 
 now_datetime = get_now_datetime()
 
