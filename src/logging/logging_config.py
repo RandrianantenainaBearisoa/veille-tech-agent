@@ -1,6 +1,6 @@
 import logging
 
-from src.utils.helpers import generate_random_str, get_now_datetime
+from src.utils.utils import generate_random_str, get_now_datetime
 
 now_datetime = get_now_datetime()
 
