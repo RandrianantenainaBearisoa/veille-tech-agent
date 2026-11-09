@@ -1,9 +1,5 @@
 # import logging
-import random
-import string
-from datetime import datetime
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 import yaml
 
@@ -41,19 +37,13 @@ def get_feed_topics() -> list[dict]:
     return []
 
 
-def get_now_datetime() -> datetime | None:
+def get_rss_categories() -> dict:
+    config_file = "config/sources_config.yaml"
+    yaml_data = read_yaml(Path(config_file))
     try:
-        local_tz = ZoneInfo("localtime")
-        return datetime.now(local_tz)
+        return yaml_data["rss_categories"]
+    except KeyError:
+        logger.exception("Error: the key used is not valid")
     except Exception:
         logger.exception("An error occured.")
-
-
-def generate_random_str(length: int = 12) -> str:
-    try:
-        alphabet = string.ascii_letters + string.digits
-        random_string = "".join(random.choices(alphabet, k=length))
-        return random_string
-    except Exception:
-        logger.exception("An error occured.")
-    return ""
+    return {}

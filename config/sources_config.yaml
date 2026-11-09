@@ -42,3 +42,11 @@ rss_list:
 
   - topic: IoT
     feeds: ["https://www.iiot-world.com/feed/"]
+
+rss_categories:
+  AI: "IA & Data"
+  WebDev: "Développement Web"
+  Software: "Logiciel & Architecture"
+  Cybersec: "Cybersécurité"
+  DevOps: "Cloud, DevOps & Systèmes"
+  IoT: "IoT & Matériel"
