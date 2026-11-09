@@ -1,6 +1,7 @@
 # import logging
 from pathlib import Path
 
+import langid
 import yaml
 
 from src.logging.logging_config import logging
@@ -47,3 +48,12 @@ def get_rss_categories() -> dict:
     except Exception:
         logger.exception("An error occured.")
     return {}
+
+
+def lang_validator(text_to_validate: str, expected_lang: str = "fr") -> bool:
+    try:
+        lang, _ = langid.classify(instance=text_to_validate)
+        return expected_lang == lang
+    except Exception:
+        logger.exception("An error occured.")
+    return False

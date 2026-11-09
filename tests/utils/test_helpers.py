@@ -3,7 +3,12 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 from src.utils import helpers as helpers_module
-from src.utils.helpers import get_feed_topics, get_rss_categories, read_yaml
+from src.utils.helpers import (
+    get_feed_topics,
+    get_rss_categories,
+    lang_validator,
+    read_yaml,
+)
 
 
 def test_yaml_normal(monkeypatch):
@@ -88,6 +93,7 @@ def test_get_get_rss_categories(monkeypatch):
 
     assert result == expected_result
 
+
 def test_get_get_rss_categories_fail(monkeypatch):
     def mock_read_yaml(filepath):
         return {"rss_categoriess": {"key": "value"}}
@@ -97,4 +103,31 @@ def test_get_get_rss_categories_fail(monkeypatch):
     result = get_rss_categories()
     expected_result = {}
 
+    assert result == expected_result
+
+
+def test_lang_validator(monkeypatch):
+    class Mocklangid:
+        @classmethod
+        def classify(cls, instance):
+            return "fr", 0.4
+
+    monkeypatch.setattr(helpers_module, "langid", Mocklangid)
+
+    result = lang_validator("toto")
+    expected_result = True
+    assert result == expected_result
+
+
+def test_lang_validator_fail(monkeypatch):
+    class Mocklangid:
+        @classmethod
+        def classify(cls, instance):
+            print(0 / 0)
+            return "fr", 0.4
+
+    monkeypatch.setattr(helpers_module, "langid", Mocklangid)
+
+    result = lang_validator("toto")
+    expected_result = False
     assert result == expected_result
