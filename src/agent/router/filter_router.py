@@ -5,7 +5,7 @@ from src.agent.state.actu_poster_state import ActuPosterState
 MAX_FILTER_RETRY = 3
 
 
-def route_after_priorization_process(
+def route_after_filter_process(
     state: ActuPosterState,
 ) -> Literal["end_graph", "check_if_posted_before", "synthetize_content"]:
     if not state["duplicate_check_validation"]:
