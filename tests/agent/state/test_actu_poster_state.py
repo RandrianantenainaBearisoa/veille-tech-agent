@@ -5,10 +5,7 @@ now_datetime = get_now_datetime()
 
 if now_datetime is not None:
     example_feed_items = FeedItem(
-        title="",
-        pub_date=now_datetime,
-        description="",
-        link="",
+        title="", pub_date=now_datetime, description="", link="", feed=""
     )
 
 example_state = ActuPosterState(

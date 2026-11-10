@@ -201,6 +201,7 @@ def test_get_feed_item_data():
         pub_date=parsedate_to_datetime("Wed, 04 Nov 2026 13:49:51 +0000"),
         description="The AI minister now concedes the estimated figure is less than a third of that. Researchers blame the country’s slow rate of adoption",
         link="https://www.wired.com/story/uk-officials-said-ai-would-add-400-billion-to-the-economy-that-figure-mainly-came-from-google/",
+        feed="https://www.wired.com/",
     )
 
     item_no_title = etree.fromstring(
@@ -220,11 +221,11 @@ def test_get_feed_item_data():
         parser=etree.XMLParser(encoding="utf-8"),
     )
 
-    result_ok = get_feed_item_data(item_ok)
-    result_no_title = get_feed_item_data(item_no_title)
-    result_no_link = get_feed_item_data(item_no_link)
-    result_no_pub_date = get_feed_item_data(item_no_pub_date)
-    result_no_descri = get_feed_item_data(item_no_descri)
+    result_ok = get_feed_item_data(item_ok, "https://www.wired.com/")
+    result_no_title = get_feed_item_data(item_no_title, "https://www.wired.com/")
+    result_no_link = get_feed_item_data(item_no_link, "https://www.wired.com/")
+    result_no_pub_date = get_feed_item_data(item_no_pub_date, "https://www.wired.com/")
+    result_no_descri = get_feed_item_data(item_no_descri, "https://www.wired.com/")
 
     assert result_ok == expected_result
     assert (
@@ -253,6 +254,6 @@ def test_get_feed_item_data_fail(monkeypatch):
         item_ok_str.encode("utf-8"),
         parser=etree.XMLParser(encoding="utf-8"),
     )
-    result = get_feed_item_data(item_ok)
+    result = get_feed_item_data(item_ok, "https://www.wired.com/")
 
     assert result == None

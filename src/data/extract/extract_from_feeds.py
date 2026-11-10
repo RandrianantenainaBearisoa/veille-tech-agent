@@ -68,9 +68,10 @@ class FeedItem(TypedDict):
     pub_date: datetime
     description: str
     link: str
+    feed: str
 
 
-def get_feed_item_data(item: _Element) -> FeedItem | None:
+def get_feed_item_data(item: _Element, feed_url: str) -> FeedItem | None:
     try:
         item_title = item.find("title")
         item_pub_date = get_feed_item_pub_date(item)
@@ -87,6 +88,7 @@ def get_feed_item_data(item: _Element) -> FeedItem | None:
                 pub_date=item_pub_date,
                 description=extract_from_html(f"<html>{item_description.text}</html>"),
                 link=str(item_link.text),
+                feed=feed_url,
             )
     except Exception:
         logger.exception("An error occured")
@@ -106,7 +108,7 @@ def get_feeds_data(feeds: list) -> list[FeedItem]:
                     if date_is_valid:
                         # check if the the item is related to tech
                         tech_valid = filter_tech_item(item)
-                        item_data = get_feed_item_data(item)
+                        item_data = get_feed_item_data(item, feed_url)
                         if tech_valid and item_data is not None:
                             feed_items_list.append(item_data)
                     else:
