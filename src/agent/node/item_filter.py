@@ -1,8 +1,13 @@
+from datetime import datetime
+
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
+from sqlmodel import Session, select
 
 from src.agent.state.actu_poster_state import ActuPosterState
 from src.ai_model.used_llm import LLM
+from src.database.database import get_session
+from src.database.models.table import Post, PostPrompt
 from src.logging.logging_config import logging
 
 logger = logging.getLogger(__name__)
@@ -15,7 +20,7 @@ check_prompt = ChatPromptTemplate.from_messages(
                 You are an automated deduplication agent for a technical curation pipeline. Your task is to compare a list of current tech news against a history of previously published posts to prevent posting the same topic twice.
 
                 ### Inputs you will receive:
-                1. `previous_posts`: A list of news titles and summaries that have already been published (Could be an empty list).
+                1. `previous_posts`: A list of news titles and summaries that have already been published (Could be an empty list), retrieved from the Database.
                 2. `tech_news_to_check`: A list of newly fetched news items to evaluate.
 
                 ### Instructions:
@@ -56,7 +61,8 @@ def check_if_posted_before(state: ActuPosterState) -> dict:
             state["feed_items_base_list"][i]
             for i in state["feed_items_relevant_indexes"]
         ]
-        previous_post = get_previous_post()
+        with get_session() as session:
+            previous_post = get_previous_post(session)
         if len(previous_post) > 0:
             checking_result = NEWS_CHECK.invoke(
                 {
@@ -91,5 +97,27 @@ def check_if_posted_before(state: ActuPosterState) -> dict:
     return {"duplicate_check_retry": retry, "duplicate_check_validation": False}
 
 
-def get_previous_post() -> list:
+def get_previous_post(session: Session) -> list[dict]:
+    try:
+        last_post_date = get_last_post_date(session)
+        statement = select(Post).where(Post.created_at == last_post_date)
+        previous_posts = session.exec(statement).all()
+        previous_posts = [
+            PostPrompt.model_validate(previous).model_dump()
+            for previous in previous_posts
+        ]
+        return previous_posts
+    except Exception:
+        logger.exception("An error occured")
     return []
+
+
+def get_last_post_date(session: Session) -> datetime | None:
+    try:
+        statement = select(Post).order_by(Post.created_at.desc()).limit(1)
+        last_post = session.exec(statement).first()
+        if isinstance(last_post, Post):
+            return last_post.created_at
+    except Exception:
+        logger.exception("An error occured")
+    return None

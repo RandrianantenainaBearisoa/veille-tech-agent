@@ -1,7 +1,16 @@
+from datetime import datetime
 from typing import Any, TypedDict, cast
+from unittest.mock import MagicMock
+from zoneinfo import ZoneInfo
 
 from src.agent.node import item_filter as item_filter_module
-from src.agent.node.item_filter import CheckFormat, check_if_posted_before
+from src.agent.node.item_filter import (
+    CheckFormat,
+    check_if_posted_before,
+    get_last_post_date,
+    get_previous_post,
+)
+from src.database.models.table import Post
 
 
 class MockActuPosterState(TypedDict):
@@ -17,7 +26,7 @@ def test_check_if_posted_before_01(monkeypatch):
         feed_items_relevant_indexes=[1, 2],
     )
 
-    def mock_get_previous_post():
+    def mock_get_previous_post(session):
         return []
 
     class MockModel:
@@ -45,7 +54,7 @@ def test_check_if_posted_before_02(monkeypatch):
         feed_items_relevant_indexes=[1, 2],
     )
 
-    def mock_get_previous_post():
+    def mock_get_previous_post(session):
         return ["prev_01", "item_2"]
 
     class MockModel:
@@ -105,7 +114,9 @@ def test_check_if_posted_before_04(monkeypatch):
 
     class MockModel:
         def invoke(self, input):
-            return CheckFormat(check_list=[True]) # len is != of len(feed_items_relevant_indexes)
+            return CheckFormat(
+                check_list=[True]
+            )  # len is != of len(feed_items_relevant_indexes)
 
     monkeypatch.setattr(item_filter_module, "ActuPosterState", MockActuPosterState)
     monkeypatch.setattr(item_filter_module, "get_previous_post", mock_get_previous_post)
@@ -118,3 +129,57 @@ def test_check_if_posted_before_04(monkeypatch):
     }
 
     assert result == expected_result
+
+
+def test_get_previous_post():
+    last_post_date = datetime(2026, 11, 10, 12, 0, tzinfo=ZoneInfo("localtime"))
+    post = Post(
+        title="Post title",
+        subtitle="Post subtitle",
+        content="Post content",
+        created_at=last_post_date,
+    )
+    session = MagicMock()
+    session.exec.return_value.all.return_value = [post]
+
+    result = get_previous_post(session)
+
+    assert result == [
+        {
+            "title": "Post title",
+            "subtitle": "Post subtitle",
+            "content": "Post content",
+        }
+    ]
+
+
+def test_get_previous_post_returns_empty_list_when_no_posts(monkeypatch):
+    monkeypatch.setattr(item_filter_module, "get_last_post_date", lambda session: None)
+    session = MagicMock()
+    session.exec.return_value.all.return_value = []
+
+    assert get_previous_post(session) == []
+
+
+def test_get_last_post_date():
+    expected_date = datetime(2026, 11, 10, 12, 0, tzinfo=ZoneInfo("localtime"))
+    post = Post(
+        title="Post title",
+        subtitle="Post subtitle",
+        content="Post content",
+        created_at=expected_date,
+    )
+    session = MagicMock()
+    session.exec.return_value.first.return_value = post
+
+    assert get_last_post_date(session) == expected_date
+    statement = session.exec.call_args.args[0]
+    assert "ORDER BY post.created_at DESC" in str(statement)
+    assert "LIMIT" in str(statement)
+
+
+def test_get_last_post_date_returns_none_when_no_posts():
+    session = MagicMock()
+    session.exec.return_value.first.return_value = None
+
+    assert get_last_post_date(session) is None
