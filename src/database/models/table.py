@@ -36,6 +36,12 @@ class PostBase(SQLModel):
     content: str = Field(max_length=1000)
 
 
+class PostPrompt(SQLModel):
+    title: str = Field(max_length=34)
+    subtitle: str = Field(max_length=90)
+    content: str = Field(max_length=1000)
+
+
 class PostCategory(TimeStampsBase, table=True):
     post_id: int | None = Field(default=None, foreign_key="post.id")
     category_id: int | None = Field(default=None, foreign_key="category.id")
