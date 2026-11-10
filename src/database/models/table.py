@@ -1,0 +1,61 @@
+from datetime import datetime
+
+from sqlalchemy import JSON
+from sqlmodel import TIMESTAMP, Field, Relationship, SQLModel, text
+
+from src.utils.utils import get_now_datetime
+
+
+class TimeStampsBase(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=get_now_datetime)
+    updated_at: datetime = Field(
+        default_factory=get_now_datetime,
+        sa_type=TIMESTAMP(timezone=True),
+        nullable=False,
+        sa_column_kwargs={
+            "server_default": text("CURRENT_TIMESTAMP"),
+            "server_onupdate": text("CURRENT_TIMESTAMP"),
+        },
+    )
+
+
+class FeedBase(SQLModel):
+    name: str = Field(max_length=50)
+    url: str = Field(max_length=100)
+
+
+class Feed(FeedBase, TimeStampsBase, table=True):
+    posts: list[Post] | None = Relationship(back_populates="feed")
+
+
+class PostBase(SQLModel):
+    title: str = Field(max_length=34)
+    subtitle: str = Field(max_length=90)
+    icon_suggestions: list[str] | None = Field(default=None, sa_type=JSON)
+    content: str = Field(max_length=1000)
+
+
+class PostCategory(TimeStampsBase, table=True):
+    post_id: int | None = Field(default=None, foreign_key="post.id")
+    category_id: int | None = Field(default=None, foreign_key="category.id")
+    posted_at: datetime = Field()
+
+
+class CategoryBase(SQLModel):
+    code: str = Field(max_length=20)
+    fr_label: str = Field(max_length=50)
+
+
+class Category(CategoryBase, TimeStampsBase, table=True):
+    posts: list[Post] | None = Relationship(
+        back_populates="categories", link_model=PostCategory
+    )
+
+
+class Post(PostBase, TimeStampsBase, table=True):
+    feed_id: int | None = Field(default=None, foreign_key="feed.id")
+    feed: Feed = Relationship(back_populates="posts")
+    categories: list[Category] | None = Relationship(
+        back_populates="posts", link_model=PostCategory
+    )
