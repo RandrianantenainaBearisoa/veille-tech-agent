@@ -9,6 +9,7 @@ class ContentType(TypedDict):
     icon_suggestions: list[str]
     content: str
     categories: list[str]
+    feed: str
 
 
 class ActuPosterState(TypedDict):

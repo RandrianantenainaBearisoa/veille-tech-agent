@@ -1,4 +1,3 @@
-
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
@@ -111,7 +110,7 @@ def validate_content(content: ContentFormat) -> bool:
 
 
 def try_create_content(
-    raw_title: str, raw_description: str, raw_content: str
+    raw_title: str, raw_description: str, raw_content: str, feed: str
 ) -> ContentType | None:
     try:
         # invoke model
@@ -135,6 +134,7 @@ def try_create_content(
                     categories=[
                         CONTENT_CATEGORIES.get(cat, "") for cat in content.categories
                     ],
+                    feed=feed,
                 )
                 return content_to_post
     except Exception:
@@ -148,15 +148,15 @@ def create_content(item: FeedItem) -> ContentType | None:
         raw_title = item["title"]
         raw_description = item["description"]
         raw_content = web_scrapping(item["link"])
-
         content_to_post: ContentType | None = None
         for i in range(3):
             content_to_post = try_create_content(
-                raw_title, raw_description, raw_content
+                raw_title, raw_description, raw_content, item["feed"]
             )
             if content_to_post is not None:
                 break
         return content_to_post
     except Exception:
+        print(item["feed"])
         logger.exception("An error occured")
     return None

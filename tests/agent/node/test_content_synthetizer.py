@@ -256,13 +256,14 @@ def test_try_create_content_01(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content")
+    result = try_create_content("title", "descri", "content", "here is a feed link")
     expected_result = {
         "title": "titre",
         "subtitle": "sous tittre",
         "icon_suggestions": ["ico_01", "ico_02", "ico_03"],
         "content": example_content,
         "categories": ["IA & Data", "Développement Web", "Logiciel & Architecture"],
+        "feed": "here is a feed link",
     }
 
     assert result == expected_result
@@ -283,7 +284,7 @@ def test_try_create_content_02(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content")
+    result = try_create_content("title", "descri", "content", "here is a feed link")
 
     assert result is None
 
@@ -303,7 +304,7 @@ def test_try_create_content_03(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content")
+    result = try_create_content("title", "descri", "content", "here is a feed link")
 
     assert result is None
 
@@ -313,6 +314,7 @@ example_item = {
     "pub_date": "raw_date",
     "description": "raw_descri",
     "link": "raw_link",
+    "feed": "raw_feed",
 }
 
 
@@ -320,7 +322,7 @@ def test_create_content_01(monkeypatch):
     def mock_web_scrapping(url):
         return "raw_content"
 
-    def mock_try_create_content(raw_title, raw_description, raw_content):
+    def mock_try_create_content(raw_title, raw_description, raw_content, feed):
         return f"{raw_title}_{raw_description}_{raw_content}"
 
     monkeypatch.setattr(content_synthetizer_module, "web_scrapping", mock_web_scrapping)
