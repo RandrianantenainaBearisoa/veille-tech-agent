@@ -12,6 +12,7 @@ dependencies = [
     "lxml>=6.1.3",
     "lxml-html-clean==0.4.5",
     "lxml-stubs>=0.5.1",
+    "psycopg[binary]>=3.3.8",
     "pytest>=9.2.0",
     "pytest-mock>=3.17.0",
     "pyyaml>=6.0.3",
