@@ -21,8 +21,8 @@ class TimeStampsBase(SQLModel):
 
 
 class FeedBase(SQLModel):
-    name: str = Field(max_length=50)
-    url: str = Field(max_length=100)
+    name: str = Field(max_length=100)
+    url: str = Field(max_length=200)
 
 
 class Feed(FeedBase, TimeStampsBase, table=True):
