@@ -59,7 +59,7 @@ class Category(CategoryBase, TimeStampsBase, table=True):
 
 
 class Post(PostBase, TimeStampsBase, table=True):
-    posted_at: datetime = Field()
+    posted_at: datetime | None = Field(default=None)
     feed_id: int | None = Field(default=None, foreign_key="feed.id")
     feed: Feed = Relationship(back_populates="posts")
     categories: list[Category] | None = Relationship(
