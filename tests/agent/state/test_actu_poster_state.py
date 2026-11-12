@@ -17,4 +17,5 @@ example_state = ActuPosterState(
     duplicate_check_retry=0,
     feed_items_final_list=[],
     contents_to_post=[],
+    post_store_validation=False,
 )

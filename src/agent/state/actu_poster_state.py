@@ -30,3 +30,4 @@ class ActuPosterState(TypedDict):
     feed_items_final_list: list[FeedItem]  # the 5 items to post
 
     contents_to_post: list[ContentType]
+    post_store_validation: bool
