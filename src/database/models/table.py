@@ -45,7 +45,6 @@ class PostPrompt(SQLModel):
 class PostCategory(TimeStampsBase, table=True):
     post_id: int | None = Field(default=None, foreign_key="post.id")
     category_id: int | None = Field(default=None, foreign_key="category.id")
-    posted_at: datetime = Field()
 
 
 class CategoryBase(SQLModel):
@@ -60,6 +59,7 @@ class Category(CategoryBase, TimeStampsBase, table=True):
 
 
 class Post(PostBase, TimeStampsBase, table=True):
+    posted_at: datetime = Field()
     feed_id: int | None = Field(default=None, foreign_key="feed.id")
     feed: Feed = Relationship(back_populates="posts")
     categories: list[Category] | None = Relationship(
