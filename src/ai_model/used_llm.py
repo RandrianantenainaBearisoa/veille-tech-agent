@@ -11,4 +11,10 @@ gemini_3_8_flash = ChatGoogleGenerativeAI(
     max_retries=2,
 )
 
-LLM = gemini_3_8_flash
+gemini3_5_flash_lite = ChatGoogleGenerativeAI(
+    model="gemini-3.5-flash-lite",
+    temperature=0,
+    max_retries=2,
+)
+
+LLM = gemini3_5_flash_lite
