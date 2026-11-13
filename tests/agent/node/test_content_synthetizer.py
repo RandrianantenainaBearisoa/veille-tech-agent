@@ -256,7 +256,9 @@ def test_try_create_content_01(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content", "here is a feed link")
+    result = try_create_content(
+        "title", "descri", "content", "here is a feed link", "here is the source"
+    )
     expected_result = {
         "title": "titre",
         "subtitle": "sous tittre",
@@ -264,6 +266,7 @@ def test_try_create_content_01(monkeypatch):
         "content": example_content,
         "categories": ["IA & Data", "Développement Web", "Logiciel & Architecture"],
         "feed": "here is a feed link",
+        "source": "here is the source",
     }
 
     assert result == expected_result
@@ -284,7 +287,9 @@ def test_try_create_content_02(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content", "here is a feed link")
+    result = try_create_content(
+        "title", "descri", "content", "here is a feed link", "here is the source"
+    )
 
     assert result is None
 
@@ -304,7 +309,9 @@ def test_try_create_content_03(monkeypatch):
         content_synthetizer_module, "validate_content", mock_validate_content
     )
 
-    result = try_create_content("title", "descri", "content", "here is a feed link")
+    result = try_create_content(
+        "title", "descri", "content", "here is a feed link", "here is the source"
+    )
 
     assert result is None
 
@@ -322,8 +329,8 @@ def test_create_content_01(monkeypatch):
     def mock_web_scrapping(url):
         return "raw_content"
 
-    def mock_try_create_content(raw_title, raw_description, raw_content, feed):
-        return f"{raw_title}_{raw_description}_{raw_content}"
+    def mock_try_create_content(raw_title, raw_description, raw_content, feed, source):
+        return f"{raw_title}_{raw_description}_{raw_content}_{feed}_{source}"
 
     monkeypatch.setattr(content_synthetizer_module, "web_scrapping", mock_web_scrapping)
     monkeypatch.setattr(
@@ -331,7 +338,7 @@ def test_create_content_01(monkeypatch):
     )
 
     result = cast(Any, create_content)(example_item)
-    expected_result = "raw_title_raw_descri_raw_content"
+    expected_result = "raw_title_raw_descri_raw_content_raw_feed_raw_link"
 
     assert result == expected_result
 

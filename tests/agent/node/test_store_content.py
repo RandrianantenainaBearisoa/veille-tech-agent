@@ -99,6 +99,7 @@ def test_store_post_from_content(monkeypatch):
         "icon_suggestions": ["sug_01", "sug_02", "sug_03"],
         "content": "content",
         "categories": ["cat_01", "cat_02", "cat_03"],
+        "source": "actu-source.com",
         "feed": "feed.com",
     }
     result = cast(Any, store_post_from_content)(content_type, MockSession())
@@ -111,6 +112,7 @@ def test_store_post_from_content(monkeypatch):
             "subtitle": "subtitle",
             "icon_suggestions": ["sug_01", "sug_02", "sug_03"],
             "content": "content",
+            "source": "actu-source.com",
             "feed_id": 101,
         }
     )

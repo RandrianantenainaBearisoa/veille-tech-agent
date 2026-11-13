@@ -43,6 +43,7 @@ def store_post_from_content(content: ContentType, session: Session) -> Post | No
                     "icon_suggestions": content["icon_suggestions"],
                     "content": content["content"],
                     "feed_id": related_feed_id,
+                    "source": content["source"],
                 }
             )
             session.add(post)

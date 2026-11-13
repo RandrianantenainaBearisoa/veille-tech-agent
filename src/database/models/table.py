@@ -22,7 +22,7 @@ class TimeStampsBase(SQLModel):
 
 class FeedBase(SQLModel):
     name: str = Field(max_length=100)
-    url: str = Field(max_length=200)
+    url: str = Field(max_length=3000)
 
 
 class Feed(FeedBase, TimeStampsBase, table=True):
@@ -34,6 +34,7 @@ class PostBase(SQLModel):
     subtitle: str = Field(max_length=90)
     icon_suggestions: list[str] | None = Field(default=None, sa_type=JSON)
     content: str = Field(max_length=1000)
+    source: str = Field(max_length=3000)
 
 
 class PostPrompt(SQLModel):

@@ -9,7 +9,8 @@ class ContentType(TypedDict):
     icon_suggestions: list[str]
     content: str
     categories: list[str]
-    feed: str
+    feed: str # url of the feed where it from
+    source: str # url to the article
 
 
 class ActuPosterState(TypedDict):

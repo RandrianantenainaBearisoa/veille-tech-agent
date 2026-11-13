@@ -110,7 +110,7 @@ def validate_content(content: ContentFormat) -> bool:
 
 
 def try_create_content(
-    raw_title: str, raw_description: str, raw_content: str, feed: str
+    raw_title: str, raw_description: str, raw_content: str, feed: str, source: str
 ) -> ContentType | None:
     try:
         # invoke model
@@ -135,6 +135,7 @@ def try_create_content(
                         CONTENT_CATEGORIES.get(cat, "") for cat in content.categories
                     ],
                     feed=feed,
+                    source=source,
                 )
                 return content_to_post
     except Exception:
@@ -151,7 +152,7 @@ def create_content(item: FeedItem) -> ContentType | None:
         content_to_post: ContentType | None = None
         for i in range(3):
             content_to_post = try_create_content(
-                raw_title, raw_description, raw_content, item["feed"]
+                raw_title, raw_description, raw_content, item["feed"], item["link"]
             )
             if content_to_post is not None:
                 break
