@@ -28,7 +28,7 @@ synth_prompt = ChatPromptTemplate.from_messages(
             ### Instructions & Strict Constraints:
             1. **title**: A catchy, high-impact title in French. STRICTLY maximum 34 characters (spaces included).
             2. **subtitle**: A descriptive subtitle sentence in French. STRICTLY maximum 90 characters (spaces included).
-            3. **icon_suggestions**: A list of 3-5 precise technical keywords (in English) to search for a matching SVG icon (e.g., "server", "shield", "cpu-chip", "database", "git", "python", etc...).
+            3. **icon_suggestions**: A list of 3-5 precise technical keywords (in English) to search for a matching SVG icon (e.g., "server", "shield", "database", "git", "python", "gemini", "gpt", "claude", "cloud computing", etc...).
             4. **content**: A technical summary of the situation in French (the situation or event or news, the changes, and the core engineering value). Length MUST be strictly between 500 and 1000 characters (inclusive).
             5. **categories**: Choose 1 to 3 categories from the "Available Categories" list provided in the input.
 
