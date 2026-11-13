@@ -30,4 +30,4 @@ constructeur.add_conditional_edges(
 constructeur.add_edge("synthetize_content", "end_graph")
 constructeur.add_edge("end_graph", END)
 
-job_extractor_graph = constructeur.compile(checkpointer=InMemorySaver())
+content_creator_graph = constructeur.compile(checkpointer=InMemorySaver())
