@@ -2,6 +2,7 @@ from datetime import datetime
 
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
+from sqlalchemy import func
 from sqlmodel import Session, select
 
 from src.agent.state.actu_poster_state import ActuPosterState
@@ -100,13 +101,14 @@ def check_if_posted_before(state: ActuPosterState) -> dict:
 def get_previous_post(session: Session) -> list[dict]:
     try:
         last_post_date = get_last_post_date(session)
-        statement = select(Post).where(Post.created_at == last_post_date)
-        previous_posts = session.exec(statement).all()
-        previous_posts = [
-            PostPrompt.model_validate(previous).model_dump()
-            for previous in previous_posts
-        ]
-        return previous_posts
+        if last_post_date is not None:
+            statement = select(Post).where(func.DATE(Post.created_at) == last_post_date.date())
+            previous_posts = session.exec(statement).all()
+            previous_posts = [
+                PostPrompt.model_validate(previous).model_dump()
+                for previous in previous_posts
+            ]
+            return previous_posts
     except Exception:
         logger.exception("An error occured")
     return []
