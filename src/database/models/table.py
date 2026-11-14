@@ -59,10 +59,20 @@ class Category(CategoryBase, TimeStampsBase, table=True):
     )
 
 
-class Post(PostBase, TimeStampsBase, table=True):
+class Publication(TimeStampsBase, table=True):
+    accroche: str = Field(max_length=100)
+    status: bool | None = Field(
+        default=None
+    )  # None = pending | False = publication not posted / rejected | True = posted
     posted_at: datetime | None = Field(default=None)
+    posts: list[Post] | None = Relationship(back_populates="publication")
+
+
+class Post(PostBase, TimeStampsBase, table=True):
     feed_id: int | None = Field(default=None, foreign_key="feed.id")
+    publication_id: int | None = Field(default=None, foreign_key="publication.id")
     feed: Feed = Relationship(back_populates="posts")
     categories: list[Category] | None = Relationship(
         back_populates="posts", link_model=PostCategory
     )
+    publication: Publication | None = Relationship(back_populates="posts")
