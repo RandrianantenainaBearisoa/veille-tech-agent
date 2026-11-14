@@ -131,10 +131,19 @@ def test_check_if_posted_before_04(monkeypatch):
     assert result == expected_result
 
 
-def test_get_previous_post():
+def test_get_previous_post(monkeypatch):
     last_post_date = datetime(2026, 11, 10, 12, 0, tzinfo=ZoneInfo("localtime"))
+
+    def mock_get_last_post_date(session):
+        return last_post_date
+
+    monkeypatch.setattr(
+        item_filter_module, "get_last_post_date", mock_get_last_post_date
+    )
+
     post = Post(
         title="Post title",
+        source="this is a source",
         subtitle="Post subtitle",
         content="Post content",
         created_at=last_post_date,
@@ -165,6 +174,7 @@ def test_get_last_post_date():
     expected_date = datetime(2026, 11, 10, 12, 0, tzinfo=ZoneInfo("localtime"))
     post = Post(
         title="Post title",
+        source="this is a source",
         subtitle="Post subtitle",
         content="Post content",
         created_at=expected_date,
