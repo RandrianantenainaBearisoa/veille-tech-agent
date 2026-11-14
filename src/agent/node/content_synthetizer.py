@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from src.agent.state.actu_poster_state import ActuPosterState, ContentType
 from src.ai_model.used_llm import LLM
@@ -67,7 +67,10 @@ class ContentFormat(BaseModel):
     )
 
 
-synth_model = LLM.with_structured_output(ContentFormat)
+synth_model = LLM.with_structured_output(ContentFormat).with_retry(
+    retry_if_exception_type=(ValidationError,),
+    stop_after_attempt=3,
+)
 
 CONTENT_MAKER = synth_prompt | synth_model
 
@@ -150,12 +153,9 @@ def create_content(item: FeedItem) -> ContentType | None:
         raw_description = item["description"]
         raw_content = web_scrapping(item["link"])
         content_to_post: ContentType | None = None
-        for i in range(3):
-            content_to_post = try_create_content(
-                raw_title, raw_description, raw_content, item["feed"], item["link"]
-            )
-            if content_to_post is not None:
-                break
+        content_to_post = try_create_content(
+            raw_title, raw_description, raw_content, item["feed"], item["link"]
+        )
         return content_to_post
     except Exception:
         print(item["feed"])
