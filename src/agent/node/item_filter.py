@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from sqlmodel import Session, select
 
 from src.agent.state.actu_poster_state import ActuPosterState
@@ -47,7 +47,10 @@ class CheckFormat(BaseModel):
     )
 
 
-check_model = LLM.with_structured_output(CheckFormat)
+check_model = LLM.with_structured_output(CheckFormat).with_retry(
+    retry_if_exception_type=(ValidationError,),
+    stop_after_attempt=3,
+)
 
 NEWS_CHECK = check_prompt | check_model
 

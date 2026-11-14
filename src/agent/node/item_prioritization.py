@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from src.agent.state.actu_poster_state import ActuPosterState
 from src.ai_model.used_llm import LLM
@@ -44,7 +44,10 @@ class PriorizationFormat(BaseModel):
     )
 
 
-priorization_model = LLM.with_structured_output(PriorizationFormat)
+priorization_model = LLM.with_structured_output(PriorizationFormat).with_retry(
+    retry_if_exception_type=(ValidationError,),
+    stop_after_attempt=3,
+)
 
 NEWS_EDITOR = priorization_prompt | priorization_model
 
