@@ -1,14 +1,11 @@
-from datetime import datetime
-
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from sqlalchemy import func
 from sqlmodel import Session, select
 
 from src.agent.state.actu_poster_state import ActuPosterState
 from src.ai_model.used_llm import LLM
 from src.database.database import get_session
-from src.database.models.table import Post, PostPrompt
+from src.database.models.table import Post, PostPrompt, Publication
 from src.logging.logging_config import logging
 
 logger = logging.getLogger(__name__)
@@ -100,9 +97,9 @@ def check_if_posted_before(state: ActuPosterState) -> dict:
 
 def get_previous_post(session: Session) -> list[dict]:
     try:
-        last_post_date = get_last_post_date(session)
-        if last_post_date is not None:
-            statement = select(Post).where(func.DATE(Post.created_at) == last_post_date.date())
+        last_publication_id = get_last_publication_id(session)
+        if last_publication_id is not None:
+            statement = select(Post).where(Post.publication_id == last_publication_id)
             previous_posts = session.exec(statement).all()
             previous_posts = [
                 PostPrompt.model_validate(previous).model_dump()
@@ -114,12 +111,12 @@ def get_previous_post(session: Session) -> list[dict]:
     return []
 
 
-def get_last_post_date(session: Session) -> datetime | None:
+def get_last_publication_id(session: Session) -> int | None:
     try:
-        statement = select(Post).order_by(Post.created_at.desc()).limit(1)
-        last_post = session.exec(statement).first()
-        if isinstance(last_post, Post):
-            return last_post.created_at
+        statement = select(Publication).order_by(Publication.created_at.desc()).limit(1)
+        last_publication = session.exec(statement).first()
+        if isinstance(last_publication, Publication):
+            return last_publication.id
     except Exception:
         logger.exception("An error occured")
     return None
