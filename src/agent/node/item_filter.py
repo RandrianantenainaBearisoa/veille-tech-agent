@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from src.agent.state.actu_poster_state import ActuPosterState
 from src.ai_model.used_llm import LLM
 from src.database.database import get_session
-from src.database.models.table import Post, PostPrompt, Publication
+from src.database.models.table import PostPrompt, Publication
 from src.logging.logging_config import logging
 
 logger = logging.getLogger(__name__)
@@ -97,10 +97,11 @@ def check_if_posted_before(state: ActuPosterState) -> dict:
 
 def get_previous_post(session: Session) -> list[dict]:
     try:
-        last_publication_id = get_last_publication_id(session)
-        if last_publication_id is not None:
-            statement = select(Post).where(Post.publication_id == last_publication_id)
-            previous_posts = session.exec(statement).all()
+        last_publication = get_last_publication(session)
+        if last_publication is not None:
+            previous_posts = (
+                last_publication.posts if last_publication.posts is not None else []
+            )
             previous_posts = [
                 PostPrompt.model_validate(previous).model_dump()
                 for previous in previous_posts
@@ -111,12 +112,12 @@ def get_previous_post(session: Session) -> list[dict]:
     return []
 
 
-def get_last_publication_id(session: Session) -> int | None:
+def get_last_publication(session: Session) -> Publication | None:
     try:
         statement = select(Publication).order_by(Publication.created_at.desc()).limit(1)
         last_publication = session.exec(statement).first()
         if isinstance(last_publication, Publication):
-            return last_publication.id
+            return last_publication
     except Exception:
         logger.exception("An error occured")
     return None
