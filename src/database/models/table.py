@@ -70,7 +70,7 @@ class Publication(TimeStampsBase, table=True):
 
 class Post(PostBase, TimeStampsBase, table=True):
     feed_id: int | None = Field(default=None, foreign_key="feed.id")
-    publication_id: int | None = Field(default=None, foreign_key="publication.id")
+    publication_id: int = Field(foreign_key="publication.id")
     feed: Feed = Relationship(back_populates="posts")
     categories: list[Category] | None = Relationship(
         back_populates="posts", link_model=PostCategory
