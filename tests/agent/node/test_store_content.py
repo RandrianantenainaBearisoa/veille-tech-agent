@@ -9,9 +9,10 @@ from src.agent.node.store_content import (
     get_feed_id,
     store_post_categories,
     store_post_from_content,
+    store_publication,
     store_the_contents,
 )
-from src.database.models.table import Feed, Post, PostCategory
+from src.database.models.table import Feed, Post, PostCategory, Publication
 
 
 def test_get_feed_id(monkeypatch):
@@ -102,7 +103,7 @@ def test_store_post_from_content(monkeypatch):
         "source": "actu-source.com",
         "feed": "feed.com",
     }
-    result = cast(Any, store_post_from_content)(content_type, MockSession())
+    result = cast(Any, store_post_from_content)(content_type, 404, MockSession())
     expected_result = Post.model_validate(
         {
             "id": 106,
@@ -113,6 +114,7 @@ def test_store_post_from_content(monkeypatch):
             "icon_suggestions": ["sug_01", "sug_02", "sug_03"],
             "content": "content",
             "source": "actu-source.com",
+            "publication_id": 404,
             "feed_id": 101,
         }
     )
@@ -155,7 +157,7 @@ def test_store_post_from_content_fail(monkeypatch):
         "categories": ["cat_01", "cat_02", "cat_03"],
         "feed": "feed.com",
     }
-    result = cast(Any, store_post_from_content)(content_type, MockSession())
+    result = cast(Any, store_post_from_content)(content_type, 404, MockSession())
     assert result is None
 
 
@@ -323,7 +325,7 @@ def test_content_to_post(monkeypatch):
             else:
                 self.id = 5
 
-    def mock_store_post_from_content(content, session):
+    def mock_store_post_from_content(content, publication_id, session):
         if content["categories"] == "post_none":
             return None
         else:
@@ -344,10 +346,10 @@ def test_content_to_post(monkeypatch):
     example_content_03 = {"categories": "id_true"}
     example_content_04 = {"categories": "id_false"}
 
-    result_01 = cast(Any, content_to_post)(example_content_01, "session")
-    result_02 = cast(Any, content_to_post)(example_content_02, "session")
-    result_03 = cast(Any, content_to_post)(example_content_03, "session")
-    result_04 = cast(Any, content_to_post)(example_content_04, "session")
+    result_01 = cast(Any, content_to_post)(example_content_01, 404, "session")
+    result_02 = cast(Any, content_to_post)(example_content_02, 404, "session")
+    result_03 = cast(Any, content_to_post)(example_content_03, 404, "session")
+    result_04 = cast(Any, content_to_post)(example_content_04, 404, "session")
 
     assert result_01 == False
     assert result_02 == False
@@ -363,14 +365,17 @@ def test_content_to_post_fail(monkeypatch):
         store_content_module, "store_post_from_content", mock_store_post_from_content
     )
     example_content = {"categories": "post_none"}
-    result = cast(Any, content_to_post)(example_content, "session")
+    result = cast(Any, content_to_post)(example_content, 404, "session")
 
     assert result == False
 
 
 def test_store_the_contents(monkeypatch):
-    def mock_content_to_post(content, session):
+    def mock_content_to_post(content, publication_id, session):
         return content
+
+    def mock_store_publication(session):
+        return 404
 
     class MockSession:
         def __init__(self) -> None:
@@ -385,6 +390,9 @@ def test_store_the_contents(monkeypatch):
     def mock_get_session():
         yield session
 
+    monkeypatch.setattr(
+        store_content_module, "store_publication", mock_store_publication
+    )
     monkeypatch.setattr(store_content_module, "content_to_post", mock_content_to_post)
     monkeypatch.setattr(store_content_module, "get_session", mock_get_session)
 
@@ -432,3 +440,30 @@ def test_store_the_contents_fail(monkeypatch):
 
     assert result_01 == expected_01
     assert result_02 == expected_02
+
+
+def test_store_publication(monkeypatch):
+    datetime_exp = datetime(2026, 11, 10, 12, 0, tzinfo=ZoneInfo("localtime"))
+
+    class MockSession:
+        def __init__(self) -> None:
+            self.actions = []
+            self.pub = None
+
+        @contextmanager
+        def begin_nested(self):
+            yield "session"
+
+        def add(self, instance: Publication):
+            self.pub = instance
+
+        def flush(self):
+            if self.pub is not None:
+                self.pub.id = 404
+                self.pub.created_at = datetime_exp
+                self.pub.updated_at = datetime_exp
+
+    monkeypatch.setattr(store_content_module, "Session", MockSession)
+
+    result = cast(Any, store_publication)(MockSession())
+    assert result == 404
