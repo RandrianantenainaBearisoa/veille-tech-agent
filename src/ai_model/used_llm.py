@@ -10,19 +10,30 @@ rate_limiter = InMemoryRateLimiter(
     max_bucket_size=1,
 )
 
+TEMPERATURE = 0.1
+MAX_RETRY = 2
+
 gemini_3_8_flash = ChatGoogleGenerativeAI(
     model="gemini-3.8-flash",
-    temperature=0,
+    temperature=TEMPERATURE,
     max_tokens=None,
     timeout=None,
     rate_limiter=rate_limiter,
-    max_retries=3,
+    max_retries=MAX_RETRY,
 )
 
-gemini3_5_flash_lite = ChatGoogleGenerativeAI(
+gemini_3_6_flash = ChatGoogleGenerativeAI(
+    model="gemini-3.6-flash",
+    max_tokens=None,
+    timeout=None,
+    rate_limiter=rate_limiter,
+    max_retries=MAX_RETRY,
+)
+
+gemini_3_5_flash_lite = ChatGoogleGenerativeAI(
     model="gemini-3.5-flash-lite",
     rate_limiter=rate_limiter,
-    max_retries=3,
+    max_retries=MAX_RETRY,
 )
 
-LLM = gemini3_5_flash_lite
+LLM = gemini_3_8_flash.with_fallbacks([gemini_3_6_flash, gemini_3_5_flash_lite])
