@@ -1,0 +1,52 @@
+rss_list:
+  - topic: AI
+    feeds:
+      [
+        "https://arstechnica.com/ai/feed/",
+        "https://huggingface.co/blog/feed.xml",
+        "https://realpython.com/atom.xml",
+      ]
+
+  - topic: Cybersec
+    feeds:
+      [
+        "https://www.wired.com/feed/rss",
+        "https://feeds.feedburner.com/TheHackersNews?format=xml",
+        "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/cybersecurity/rss.xml",
+      ]
+
+  - topic: Software
+    feeds:
+      [
+        "https://dev.to/feed",
+        "https://stackoverflow.blog/feed/",
+        "https://www.freecodecamp.org/news/rss/",
+      ]
+
+  - topic: WebDev
+    feeds:
+      [
+        "https://nodejs.org/en/feed/blog.xml",
+        "https://medium.com/feed/the-vue-point",
+      ]
+
+  - topic: DevOps
+    feeds:
+      [
+        "https://www.docker.com/feed/",
+        "https://github.blog/feed/",
+        "https://thenewstack.io/feed",
+        "https://kubernetes.io/feed.xml",
+        "https://devops.com/feed",
+      ]
+
+  - topic: IoT
+    feeds: ["https://www.iiot-world.com/feed/"]
+
+rss_categories:
+  AI: "IA & Data"
+  WebDev: "Développement Web"
+  Software: "Logiciel & Architecture"
+  Cybersec: "Cybersécurité"
+  DevOps: "Cloud, DevOps & Systèmes"
+  IoT: "IoT & Matériel"

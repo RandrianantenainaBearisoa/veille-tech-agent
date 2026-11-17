@@ -1,0 +1,13 @@
+name: Scheduled Workflow
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "03 21 1-31/2 * *"
+      timezone: "Indian/Antananarivo"
+
+jobs:
+  run-task:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Task executed at $(date -u)"
