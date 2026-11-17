@@ -2,7 +2,7 @@ name: Run the Content maker Agent
 on:
   workflow_dispatch:
   schedule:
-    - cron: "25 21 * * *" # the hour used here is UTC (madagascar is UTC + 3)
+    - cron: "17 07 1-31 * *"
       timezone: "Indian/Antananarivo"
 
 jobs:
