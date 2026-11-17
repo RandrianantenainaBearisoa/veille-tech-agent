@@ -1,4 +1,3 @@
-# from src.agent.node.item_filter import get_last_publication
 from src.data.ingest_data.ingest_feeds import (
     ingest_rss_categories,
     ingest_rss_feeds,
