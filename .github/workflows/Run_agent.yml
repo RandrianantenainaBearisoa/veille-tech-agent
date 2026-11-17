@@ -1,9 +1,8 @@
-name: Scheduled Workflow
+name: Run the Content maker Agent
 on:
   workflow_dispatch:
   schedule:
-    - cron: "03 21 1-31/2 * *"
-      timezone: "Indian/Antananarivo"
+    - cron: "18 18 1-31/2 * *" # the hour used here is UTC (madagascar is UTC + 3)
 
 jobs:
   run-task:
