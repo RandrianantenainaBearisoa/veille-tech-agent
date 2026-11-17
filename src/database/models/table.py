@@ -76,3 +76,8 @@ class Post(PostBase, TimeStampsBase, table=True):
         back_populates="posts", link_model=PostCategory
     )
     publication: Publication | None = Relationship(back_populates="posts")
+
+
+class AdminDevice(TimeStampsBase, table=True):
+    fcm_token: str = Field(unique=True)
+    platform: str | None = Field(default=None)
