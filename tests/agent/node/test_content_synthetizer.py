@@ -264,7 +264,11 @@ def test_try_create_content_01(monkeypatch):
         "subtitle": "sous tittre",
         "icon_suggestions": ["ico_01", "ico_02", "ico_03"],
         "content": example_content,
-        "categories": ["IA & Data", "Développement Web", "Logiciel & Architecture"],
+        "categories": [
+            "AI",
+            "WebDev",
+            "Software",
+        ],
         "feed": "here is a feed link",
         "source": "here is the source",
     }
