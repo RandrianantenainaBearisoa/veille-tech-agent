@@ -134,9 +134,7 @@ def try_create_content(
                     subtitle=content.subtitle,
                     icon_suggestions=content.icon_suggestions,
                     content=content.content,
-                    categories=[
-                        CONTENT_CATEGORIES.get(cat, "") for cat in content.categories
-                    ],
+                    categories=content.categories,
                     feed=feed,
                     source=source,
                 )
