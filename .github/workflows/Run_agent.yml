@@ -2,7 +2,7 @@ name: Run the Content maker Agent
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 07 1-31 * *"
+    - cron: "30 10 1-31 * *"
       timezone: "Indian/Antananarivo"
 
 jobs:
